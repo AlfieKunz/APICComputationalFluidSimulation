@@ -9,11 +9,11 @@
 
 ---
 
-A real-time *hybrid* Euler-Lagrange **Fluid Simulation**, that uses the PIC, FLIP, and **APIC** methods respectively (which are on the cutting edge of CFD) to explore the interaction of high performance, momentum conserving vortices.
+A real-time *hybrid* Euler-Lagrange **Fluid Simulation**, that uses the PIC, FLIP, and **APIC** methods respectively (which are on the cutting edge of CFD) to explore the interaction of high-performance, momentum conserving vortices.
 
-In these *hybrid* models, we constantly switch between particle-based and staggered MAC grid-based approaches, in an attempt to combine the strengths of Lagrangian advection and Eulerian projection. The Affine-PIC model in particular attempt to reduce the numerical dissipation which is naturally present in the transfer between these schemes (which typically appears as a loss of angular momentum) by 'doping' each particle with an affine velocity field, containing their angular information. In this way, we better preserve vortex information and rotation, making this method applicable to large-scale aviation or weather monitoring, in which effects such as vortex shedding and turbulence are essential to generating accurate results.
+In these *hybrid* models, we constantly switch between particle-based and staggered MAC grid-based approaches, in an attempt to combine the strengths of Lagrangian advection and Eulerian projection. The Affine-PIC model in particular attempts to reduce the numerical dissipation which is naturally present in the transfer between these schemes (which typically appears as a loss of angular momentum) by 'doping' each particle with an affine velocity field, containing its angular information. In this way, we better preserve vortex information and rotation, making this method applicable to large-scale aviation or weather monitoring, in which effects such as vortex shedding and turbulence are essential to generating accurate results.
 
-My simulation, which involves novel application of these algorithms to my specific domains (see the technical details below), is written in C#, rendered as a fragment shader using Instanced Procedural Drawing, and heavily optimised through parallelism on the GPU using HLSL compute shaders.  
+My simulation, which involves a novel application of these algorithms to my specific domains (see the technical details below), is written in C#, rendered as a fragment shader using Instanced Procedural Drawing, and heavily optimised through parallelism on the GPU using HLSL compute shaders.  
 This open-source code forms part of a wider research project, on studying the emergence and angular momentum properties of vortices in a large-scale fluid system, and the advantages of these *hybrid* regimes over more typical solvers, such as direct solvers or SPH. This involves an accompanying LaTeX paper, documenting my research, implementation, and unique findings as a rigorous, well-referenced mathematical essay.
 
 This work as a whole is accredited with the University of Warwick's Department of Mathematics, under the 'MA369 3rd Year Essay' module, and is supervised by Dr Radu Cimpeanu.
@@ -32,7 +32,7 @@ This work as a whole is accredited with the University of Warwick's Department o
 ✅ Grid projection handled through an implementation of a heavily optimised CGM algorithm, using divergence calculations and pressure updating models.  
 ✅ Successful extraction of particle and grid velocity gradient information (both shear and angular), and subsequent 'doping' onto the grid, through both rigid and affine velocity approximations (ie: RPIC and APIC).  
 ✅ Real-time tracking of global physical quantities (eg: angular momentum, kinetic energy), for debugging and testing.  
-✅ Identified a novel Reynolds Number value of 5419.69 (16,000 APIC particles per vortex) under the Taylor-Green Vortex - a remarkable value for real-time CFD (for refernce, standard PIC yields Re = 10.27 in the same setup).  
+✅ Identified a novel Reynolds Number value of 5419.69 (16,000 APIC particles per vortex) under the Taylor-Green Vortex - a remarkable value for real-time CFD (for reference, standard PIC yields Re = 10.27 in the same setup).  
 ✅ Intuitive interaction of the fluid through the Unity Game engine, allowing the user to exert complex forces via their mouse, or adjust the physics / model in real-time.  
 ✅ Rendering of particles through HLSL compute shaders, written under the 'Instanced Procedural Drawing', and subsequent memory management to and from the GPU through compute buffers.  
 ✅ Educational illustration of the grid, and their velocity components, through the Unity 'Gizmos' system.  
@@ -64,7 +64,7 @@ Left Click: Repel Fluid from Mouse.
 Right Click: Attract Fluid towards Mouse.  
 Left + Right Click: Turns the Mouse into a source of gravity!  
 
-> **Accompanying Essay & Presentation** You can also access the <a href="https://www.alfiekunz.co.uk/academia/assets\projects/ProjectAPIC/Real-time Simulations of Momentum-Conserving Vortices - Alfie Kunz.pdf" target="_blank" rel="noopener noreferrer">**Mathematical Essay**</a> and <a href="https://www.alfiekunz.co.uk/academia/assets/projects/ProjectAPIC/MA395 Warwick Presentation - Alfie Kunz.pdf" target="_blank" rel="noopener noreferrer">**Related Presentation Slides**</a> that encompass this project.
+> **Accompanying Essay & Presentation:** You can also access the <a href="https://www.alfiekunz.co.uk/academia/assets\projects/ProjectAPIC/Real-time Simulations of Momentum-Conserving Vortices - Alfie Kunz.pdf" target="_blank" rel="noopener noreferrer">**Mathematical Essay**</a> and <a href="https://www.alfiekunz.co.uk/academia/assets/projects/ProjectAPIC/MA395 Warwick Presentation - Alfie Kunz.pdf" target="_blank" rel="noopener noreferrer">**Related Presentation Slides**</a> that encompass this project.
 
 Alternatively, one can download the source code, as instructed below, for full control.
 
@@ -99,7 +99,7 @@ Alternatively, one can download the source code, as instructed below, for full c
 
 ## Technical Details
 
-Fluid solvers broadly fall into two camps: **Eulerian** (a fixed grid - great at pressure projection and boundary handling, but cannot handle advection) and **Lagrangian** (free particles - great at advection and complex shapes, but ill-handles discrete gradient operators for projection). PIC bridges the two by constantly transferring information between the grid and particle representations each timestep: the grid handles projection, the particles handle advection, and thus we get a solver that's fast *and* geometrically flexible.
+Fluid solvers broadly fall into two camps: **Eulerian** (a fixed grid - great at pressure projection and boundary handling, but cannot handle advection) and **Lagrangian** (free particles - great at advection and complex shapes, but handles discrete gradient operators poorly for projection). PIC bridges the two by constantly transferring information between the grid and particle representations each timestep: the grid handles projection, the particles handle advection, and thus we get a solver that's fast *and* geometrically flexible.
 
 Enforcing incompressibility on the grid comes down to a Helmholtz-style decomposition: take the divergence of the velocity field, solve a discrete Poisson equation for a scalar pseudo-pressure, then subtract its gradient back out. On a staggered MAC grid this becomes a sparse, symmetric positive-definite linear system, solved via a Preconditioned Conjugate Gradient Method (with the preconditioner being the Incomplete Cholesky factorisation, with drop-tolerance thresholding, level-0).
 
@@ -111,7 +111,7 @@ Please see the "Project Showcase" section for a full description of these method
 
 ---
 
-## Installation, and Folder Structure
+## Installation and Folder Structure
 
 ### Required Software: Unity (Editor of Export: 6000.5.3f1), Visual Studio (Community 2026).
 
@@ -139,7 +139,7 @@ CFD-APIC-Vortices
    │  ├─ FluidSim.cs               // Handles setup, rendering, and user inputs of the simulation: initialising grid & particles, constructing GPU buffers and quad-meshes, Unity gizmos for cell viewing
    │  ├─ GlobalSettings.cs         // Class of all user-editable settings in the inspector, appropriate adjusting of simulation
    │  ├─ GlobalSettingsResetter.cs // Instantiates Settings buffer at runtime
-   │  ├─ Interpolation.cs          // Computes and transferring velocity and angular momentum (APIC) information between grid & particle representations, in parallel
+   │  ├─ Interpolation.cs          // Computing and transferring velocity and angular momentum (APIC) information between grid & particle representations, in parallel
    │  ├─ ModeSwitcher.cs           // Buttons for switching between CFD regimes in real-time
    │  ├─ Particle.cs               // Structure for holding & computing particle data: grid location, momentum information, sub-structure for render information
    │  ├─ PCG.cs                    // Preconditioned Conjugate Gradient Method (CGM): divergence calculations, neighbourhood lookup computation, Incomplete Cholesky Factorisation, PCG algorithm, pressure projection
